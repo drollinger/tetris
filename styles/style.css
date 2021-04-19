@@ -1,0 +1,49 @@
+@font-face {
+    font-family: 'SilkscreenRegular';
+    src: url("../fonts/slkscr.ttf");
+}
+
+@font-face {
+    font-family: 'CalculatorRegular';
+    src: url("../fonts/Calculator.ttf");
+}
+
+body {
+    background-image: url("../images/space.jpg");
+}
+
+h1, h2, h3, li, #credits {
+    color: white;
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+}
+
+li {
+    font-size: 25px;
+    padding-top: 20px;
+}
+
+#canvas {
+    width: 100%;
+    max-width: 1000px;
+}
+
+.row-section {
+    display: none;
+}
+
+.img-side {
+    max-width: 100%;
+    height: auto;
+}
+
+.white-text {
+    color: white;
+    font-size: 24px;
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+}

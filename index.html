@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset = "UTF-8">
+    <title>Tetris</title>
+    <link rel="stylesheet" type="text/css" href="styles/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="styles/style.css"/>
+    <script src='styles/bootstrap.bundle.min.js'></script>
+    <script src='scripts/settings.js'></script>
+    <script src='scripts/audio.js'></script>
+    <script src='scripts/menuing.js'></script>
+    <script src='scripts/gamePlay.js'></script>
+    <script src='scripts/input.js'></script>
+    <script src='scripts/graphics.js'></script>
+    <script src='scripts/main.js'></script>
+</head>
+<body onload="main()">
+    <div class"container">
+        <div id="canvasSection" class="row row-section">
+            <div id="canvasSection" class="row d-flex justify-content-center">
+                <canvas id="canvas" width="1000" height="1000"></canvas>
+            </div>
+        </div>
+        <div id="pauseMenuSection" class="row row-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col text-center">
+                        <h2>Game Paused</h2>
+                    </div>
+                </div>
+                <div class="row my-4">
+                    <div class="col text-center">
+                        <button type="button" id="resumeMenu" class="btn btn-primary">Resume</button>
+                    </div>
+                </div>
+                <div class="row my-4">
+                    <div class="col text-center">
+                        <button type="button" id="exitMenu" class="btn btn-primary">Exit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="mainMenuSection" class="row row-section">
+            <div class="container">
+                <div class="row my-4">
+                    <div class="col text-center">
+                        <button type="button" id="newGameMenu" class="btn btn-primary">New Game</button>
+                    </div>
+                </div>
+                <div class="row my-4">
+                    <div class="col text-center">
+                        <button type="button" id="highscoresMenu" class="btn btn-primary">High Scores</button>
+                    </div>
+                </div>
+                <div class="row my-4">
+                    <div class="col text-center">
+                        <button type="button" id="customizeMenu" class="btn btn-primary">Customize Controls</button>
+                    </div>
+                </div>
+                <div class="row my-4">
+                    <div class="col text-center">
+                        <button type="button" id="creditsMenu" class="btn btn-primary">Credits</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="highscoresSection" class="row row-section">
+            <div class="col text-center">
+                <div class="row">
+                    <h2>HIGHSCORES</h2>
+                </div>
+                <div class="row">
+                    <div class="col-3"></div>
+                    <div class="col-6">
+                        <h2>Scores</h2>
+                        <ol id="highscoresList">
+                        </ol>
+                    </div>
+                    <div class="col-3"></div>
+                </div>
+            </div>
+        </div>
+        <div id="customizeSection" class="row row-section">
+            <div class="col text-center">
+                <h2>Customize Section</h2>
+                <div class="py-4">
+                <div class="row my-4">
+                    <div class="col text-center white-text">
+                        Boost:
+                        <button type="button" id="boost" class="btn btn-primary"></button>
+                    </div>
+                </div>
+                <div class="row my-4">
+                    <div class="col text-center white-text">
+                        Rotate Left:
+                        <button type="button" id="rotateLeft" class="btn btn-primary"></button>
+                    </div>
+                </div>
+                <div class="row my-4">
+                    <div class="col text-center white-text">
+                        Rotate Right:
+                        <button type="button" id="rotateRight" class="btn btn-primary"></button>
+                    </div>
+                </div>
+                </div>
+                <div class="row">
+                    <div id="msgText" class="col text-center white-text">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="creditsSection" class="row row-section">
+            <div class="col text-center" id="credits">
+                Assignment: Tetris<br>
+                Name: Dallin Drollinger<br>
+                A#: A01984170<br>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
