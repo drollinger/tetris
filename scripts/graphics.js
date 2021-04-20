@@ -28,9 +28,12 @@ let Graphics = function(spec) {
 
     let RenderBackground = function() {
         if (imgs.background.isReady) {
+            context.save();
+            context.imageSmoothingEnabled = false;
             context.drawImage(imgs.background, 0, 0,
                 canvas.width + 0.5, canvas.height + 0.5
             );
+            context.restore();
         };
     };
 
@@ -41,6 +44,7 @@ let Graphics = function(spec) {
     let RenderBlocks = function(spec) {
         if (imgs.block.isReady) {
             context.save();
+            context.imageSmoothingEnabled = false;
             let blocks = spec.blocks.Info.blocks;
             for (let block of blocks) {
                 let x = 100 + 50*block.loc.x;

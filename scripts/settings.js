@@ -22,7 +22,7 @@ var settings = {
         highscores: 'drollTetris.highScores',
     },
     images: {
-        background: 'images/Background.png',
+        background: 'images/background.png',
         block: 'images/block.png',
     },
     sounds: {
