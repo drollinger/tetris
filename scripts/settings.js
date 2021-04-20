@@ -1,4 +1,22 @@
 var settings = {
+    blocks: {
+        dropTime: 500,
+        cols: 10,
+        shapes: [
+            //T
+            [{x:0,y:1},{x:1,y:0},{x:1,y:1},{x:2,y:1}],
+            //Line
+            [{x:0,y:0},{x:1,y:0},{x:2,y:0},{x:3,y:0}],
+            //Block
+            [{x:1,y:0},{x:1,y:1},{x:2,y:0},{x:2,y:1}],
+            //L's
+            [{x:0,y:0},{x:0,y:1},{x:1,y:1},{x:2,y:1}],
+            [{x:0,y:1},{x:1,y:1},{x:2,y:0},{x:2,y:1}],
+            //S's
+            [{x:0,y:1},{x:1,y:0},{x:1,y:1},{x:2,y:0}],
+            [{x:0,y:0},{x:1,y:0},{x:1,y:1},{x:2,y:1}],
+        ],
+    },
     storage: {
         name: 'drollTetris',
         highscores: 'drollTetris.highScores',
@@ -10,6 +28,15 @@ var settings = {
     sounds: {
     },
     colors: {
+        blocks: [
+            'rgba(198, 122, 206, 1)',
+            'rgba(216, 248, 183, 1)',
+            'rgba(255, 154, 140, 1)',
+            'rgba(81, 196, 211, 1)',
+            'rgba(206, 31, 106, 1)',
+            'rgba(84, 227, 70, 1)',
+            'rgba(255, 210, 113, 1)',
+        ],
     },
     sections: {
         main: 'mainMenuSection',
@@ -52,3 +79,4 @@ var settings = {
 //Shortcuts to elements
 var SST = settings.storage;
 var SE = settings.elements;
+var SB = settings.blocks;

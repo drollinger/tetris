@@ -12,6 +12,7 @@ function main() {
         keyInput,
         menuing,
         gamePlay,
+        blocks,
         scores,
     ] = Initialize();
 
@@ -32,6 +33,7 @@ function main() {
     
     function update(elapsedTime) {
         gamePlay.Update(elapsedTime, menuing);
+        blocks.Update(elapsedTime, menuing.GameInPlay());
     };
     
     function render() {
@@ -47,6 +49,9 @@ function main() {
         graphics.RenderGamePlay({
             gamePlay:gamePlay
         });
+        graphics.RenderBlocks({
+            blocks:blocks,
+        });
     };
     
     function processInput(elapsedTime) {
@@ -61,6 +66,7 @@ function Initialize() {
 
     //Game Objects
     let menuing = Menuing({});
+    let blocks = Blocks({});
     let gamePlay = GamePlay({
         scores: scores,
     });
@@ -89,6 +95,7 @@ function Initialize() {
         keyInput,
         menuing,
         gamePlay,
+        blocks,
         scores
     ];
 };

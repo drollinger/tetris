@@ -39,6 +39,19 @@ let Graphics = function(spec) {
     };
 
     let RenderBlocks = function(spec) {
+        if (imgs.block.isReady) {
+            context.save();
+            let blocks = spec.blocks.Info.blocks;
+            for (let block of blocks) {
+                let x = 100 + 50*block.loc.x;
+                let y = 100 + 50*block.loc.y;
+                let d = 50;
+                context.fillStyle = block.color;
+                context.fillRect(x+1, y+1, d-2, d-2);
+                context.drawImage(imgs.block, x, y, d, d);
+            };
+            context.restore();
+        };
     };
 
     let RenderCustomControls = function(spec) {
