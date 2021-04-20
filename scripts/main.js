@@ -70,9 +70,12 @@ function Initialize() {
     let keyInput = input.Keyboard();
     menuing.InitMenuHandlers(keyInput, gamePlay);
     keyInput.RegisterButtonIds({
-        [SE.boost]: keyInput.KeyHandler(SE.boost, function(){}),
-        [SE.rotateRight]: keyInput.KeyHandler(SE.rotateRight, function(){}),
-        [SE.rotateLeft]: keyInput.KeyHandler(SE.rotateLeft, function(){}),
+        [SE.left]: keyInput.KeyHandler(SE.left, function(){}),
+        [SE.right]: keyInput.KeyHandler(SE.right, function(){}),
+        [SE.ccwRot]: keyInput.KeyHandler(SE.ccwRot, function(){}),
+        [SE.cwRot]: keyInput.KeyHandler(SE.cwRot, function(){}),
+        [SE.sDrop]: keyInput.KeyHandler(SE.sDrop, function(){}),
+        [SE.hDrop]: keyInput.KeyHandler(SE.hDrop, function(){}),
     });
 
     //Game Graphics

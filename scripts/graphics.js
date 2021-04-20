@@ -46,7 +46,10 @@ let Graphics = function(spec) {
         if (spec.gettingNextKey) msg = settings.messages.customize;
         else msg = '';
         document.getElementById(SE.customizeMsg).innerHTML = msg;
-        for (let id of [SE.boost,SE.rotateLeft,SE.rotateRight]) {
+        for (let id of [
+                SE.left, SE.right, SE.ccwRot,
+                SE.cwRot, SE.sDrop, SE.hDrop
+            ]) {
             let key = spec.buttons[id];
             if (key === ' ') key = 'Space';
             document.getElementById(id).innerHTML = key;

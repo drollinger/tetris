@@ -52,14 +52,23 @@ let Menuing = function() {
                 curState = states.SUB;
             }
         );
-        document.getElementById(settings.elements.boost).addEventListener(
-            'click', keyInput.ListenAndGetHandler(settings.elements.boost)
+        document.getElementById(SE.left).addEventListener(
+            'click', keyInput.ListenAndGetHandler(SE.left)
         );
-        document.getElementById(settings.elements.rotateLeft).addEventListener(
-            'click', keyInput.ListenAndGetHandler(settings.elements.rotateLeft)
+        document.getElementById(SE.right).addEventListener(
+            'click', keyInput.ListenAndGetHandler(SE.right)
         );
-        document.getElementById(settings.elements.rotateRight).addEventListener(
-            'click', keyInput.ListenAndGetHandler(settings.elements.rotateRight)
+        document.getElementById(SE.ccwRot).addEventListener(
+            'click', keyInput.ListenAndGetHandler(SE.ccwRot)
+        );
+        document.getElementById(SE.cwRot).addEventListener(
+            'click', keyInput.ListenAndGetHandler(SE.cwRot)
+        );
+        document.getElementById(SE.sDrop).addEventListener(
+            'click', keyInput.ListenAndGetHandler(SE.sDrop)
+        );
+        document.getElementById(SE.hDrop).addEventListener(
+            'click', keyInput.ListenAndGetHandler(SE.hDrop)
         );
         keyInput.RegisterCommand(['Escape'],
             keyInput.OnPressOnly(function () {
