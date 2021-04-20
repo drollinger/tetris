@@ -41,22 +41,20 @@ let Graphics = function(spec) {
     let RenderBlocks = function(spec) {
     };
 
-    let RenderMenu = function(spec) {
-        //Render Custom Controls Section
-        let info = spec.menuing.Info;
-        let elm = setting.elements;
+    let RenderCustomControls = function(spec) {
         let msg;
-        if (info.gettingNextKey) msg = setting.messages.customize;
+        if (spec.gettingNextKey) msg = settings.messages.customize;
         else msg = '';
-        document.getElementById(elm.customizeMsg).innerHTML = msg;
-        for (let id of [elm.boost,elm.rotateLeft,elm.rotateRight]) {
-            let key = info.buttons[id];
+        document.getElementById(SE.customizeMsg).innerHTML = msg;
+        for (let id of [SE.boost,SE.rotateLeft,SE.rotateRight]) {
+            let key = spec.buttons[id];
             if (key === ' ') key = 'Space';
             document.getElementById(id).innerHTML = key;
         }
+    };
 
-        //Render High Scores Section
-        let highscoreList = document.getElementById(elm.highscoresList);
+    let RenderHighscores = function(spec) {
+        let highscoreList = document.getElementById(SE.highscoresList);
         highscoreList.innerHTML = '';
         for (let i=0; i < 5; i++) {
             let text = spec.scores.highscores[i] ?? 'None';
@@ -97,6 +95,7 @@ let Graphics = function(spec) {
         RenderBackground,
         RenderGamePlay,
         RenderBlocks,
-        RenderMenu,
+        RenderCustomControls,
+        RenderHighscores,
     }; 
 };

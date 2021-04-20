@@ -27,6 +27,7 @@ var settings = {
         highscoresButton: 'highscoresMenu',
         credits: 'creditsMenu',
         highscoresList: 'highscoresList',
+        customize: 'customizeMenu',
         boost: 'boost',
         rotateLeft: 'rotateLeft',
         rotateRight: 'rotateRight',
@@ -37,10 +38,10 @@ var settings = {
         boost: 'ArrowUp',
         rotateLeft: 'ArrowLeft',
         rotateRight: 'ArrowRight',
-    }
+    },
     messages: {
         customize: 'Please Press New Button<br>Or Esc to Exit',
-    }
+    },
 };
 //Shortcuts to elements
 var SST = settings.storage;

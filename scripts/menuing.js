@@ -34,7 +34,7 @@ let Menuing = function() {
                 gamePlay.RestartGameHandler();
             }
         );
-        document.getElementById(settings.elements.highscores).addEventListener(
+        document.getElementById(settings.elements.highscoresButton).addEventListener(
             'click', function() {
                 toggleMenu(settings.sections.highscores);
                 curState = states.SUB;

@@ -13,7 +13,7 @@ let Input = function() {
         let handlers = {};
 
         //Variables for traking custom controls
-        let idToKey = {};
+        let IdToKey = {};
         let gettingNextKey = false;
         let clickAssign;
         
@@ -30,7 +30,7 @@ let Input = function() {
         let RegisterButtonIds = function(spec) {
             for (let item in spec) {
                 let obj = spec[item];
-                idToKey[item] = obj.key;
+                IdToKey[item] = obj.key;
                 handlers[obj.key] = obj.handler;
             }
         };
@@ -70,15 +70,17 @@ let Input = function() {
                 gettingNextKey = true;
                 clickAssign = function(key) {
                     if (key != 'Escape') {
-                        keyboard.RegisterCommand([key], handlers[key]);
-                        UnregisterKey(idToKey[id]);
-                        idToKey[id] = key;
+                        RegisterCommand([key], handlers[key]);
+                        UnregisterKey(IdToKey[id]);
+                        IdToKey[id] = key;
                         localStorage[settings.storage.name+`.${id}`] = key;
                     };
                     gettingNextKey = false;
                 };
             });
         };
+
+        let GettingNextKey = function() {return gettingNextKey};
 
         function keyPress(e) {
             if (!keys[e.key]) {
@@ -99,9 +101,12 @@ let Input = function() {
             RegisterCommand,
             UnregisterKey,
             RegisterButtonIds,
+            KeyHandler,
             Update,
             OnPressOnly,
             ListenAndGetHandler,
+            GettingNextKey,
+            IdToKey,
         };
     }
 

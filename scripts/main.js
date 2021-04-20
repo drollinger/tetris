@@ -37,9 +37,12 @@ function main() {
     function render() {
         graphics.Clear();
         graphics.RenderBackground();
-        graphics.RenderMenu({
-            menuing:menuing,
+        graphics.RenderHighscores({
             scores:scores,
+        });
+        graphics.RenderCustomControls({
+            gettingNextKey:keyInput.GettingNextKey(),
+            buttons:keyInput.IdToKey,
         });
         graphics.RenderGamePlay({
             gamePlay:gamePlay
