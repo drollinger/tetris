@@ -13,9 +13,22 @@ let Blocks = function(spec) {
         falling: [],
         backedUp: false,
     };
-    let timer = SB.initDropTime;
+    let oldDT;
+    let dropTime = SB.initDropTime;
+    let timer = dropTime;
     //Initialize lines tracking
     clearLines();
+
+    let InitBlockHandlers = function(keyInput) {
+        keyInput.RegisterButtonIds({
+            [SE.left]: keyInput.KeyHandler(SE.left, keyInput.OnPressOnly(moveLeftHandler)),
+            [SE.right]: keyInput.KeyHandler(SE.right, keyInput.OnPressOnly(moveRightHandler)),
+            [SE.ccwRot]: keyInput.KeyHandler(SE.ccwRot, function(){}),
+            [SE.cwRot]: keyInput.KeyHandler(SE.cwRot, function(){}),
+            [SE.sDrop]: keyInput.KeyHandler(SE.sDrop, keyInput.OnPressOnly(function(){console.log("working")})),
+            [SE.hDrop]: keyInput.KeyHandler(SE.hDrop, function(){}),
+        });
+    };
 
     let Update = function(elapsedTime, gameInPlay) {
         if (gameInPlay) {
@@ -44,7 +57,7 @@ let Blocks = function(spec) {
                         block.loc.y++;
                     };
                 }
-                timer = SB.initDropTime;
+                timer = dropTime;
             };
         };
     };
@@ -60,6 +73,33 @@ let Blocks = function(spec) {
         Info.falling.length = 0;
         clearLines();
         Info.backedUp = false;
+        dropTime = SB.initDropTime;
+    };
+
+    function moveLeftHandler() {
+        let canMove = true;
+        for (let block of Info.falling) {
+            if (block.loc.x-1 < 0 || Info.lines[block.loc.y][block.loc.x-1]) 
+                canMove = false;
+        };
+        if (canMove)
+            for (let block of Info.falling)
+                block.loc.x--;
+    };
+
+    function moveRightHandler() {
+        let canMove = true;
+        for (let block of Info.falling) {
+            if (block.loc.x+1 >= SG.cols || Info.lines[block.loc.y][block.loc.x+1])
+                canMove = false;
+        };
+        if (canMove)
+            for (let block of Info.falling)
+                block.loc.x++;
+    };
+
+    function softDropHandler() {
+
     };
 
     function createRandomShape() {
@@ -91,6 +131,7 @@ let Blocks = function(spec) {
 
     return {
         Info,
+        InitBlockHandlers,
         Update,
         NewBrickFall,
         ResetBoard,

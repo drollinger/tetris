@@ -16,7 +16,7 @@ var settings = {
         rows: 17,
     },
     blocks: {
-        initDropTime: 10,
+        initDropTime: 500,
         shapes: [
             //T
             [{x:0,y:1},{x:1,y:0},{x:1,y:1},{x:2,y:1}],

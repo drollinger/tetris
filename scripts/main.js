@@ -76,14 +76,7 @@ function Initialize() {
     let input = Input();
     let keyInput = input.Keyboard();
     menuing.InitMenuHandlers(keyInput, gamePlay);
-    keyInput.RegisterButtonIds({
-        [SE.left]: keyInput.KeyHandler(SE.left, function(){}),
-        [SE.right]: keyInput.KeyHandler(SE.right, function(){}),
-        [SE.ccwRot]: keyInput.KeyHandler(SE.ccwRot, function(){}),
-        [SE.cwRot]: keyInput.KeyHandler(SE.cwRot, function(){}),
-        [SE.sDrop]: keyInput.KeyHandler(SE.sDrop, function(){}),
-        [SE.hDrop]: keyInput.KeyHandler(SE.hDrop, function(){}),
-    });
+    blocks.InitBlockHandlers(keyInput);
 
     //Game Graphics
     let graphics = Graphics({
