@@ -16,7 +16,7 @@ var settings = {
         rows: 17,
     },
     blocks: {
-        initDropTime: 5000,
+        initDropTime: 2000,
         softSpeedUp: 10,
         shapes: [
             //T
@@ -31,6 +31,20 @@ var settings = {
             //S's
             [{x:0,y:1},{x:1,y:0},{x:1,y:1},{x:2,y:0}],
             [{x:0,y:0},{x:1,y:0},{x:1,y:1},{x:2,y:1}],
+        ],
+        rot: [ //rotation point must line up with shapes array
+            //T
+            {x:1.5,y:1.5},
+            //Line
+            {x:2,y:1},
+            //Block
+            {x:2,y:1},
+            //L's
+            {x:1.5,y:1.5},
+            {x:1.5,y:1.5},
+            //S's
+            {x:1.5,y:1.5},
+            {x:1.5,y:1.5},
         ],
     },
     storage: {

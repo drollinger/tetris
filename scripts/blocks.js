@@ -23,8 +23,8 @@ let Blocks = function(spec) {
         keyInput.RegisterButtonIds({
             [SE.left]: keyInput.KeyHandler(SE.left, keyInput.OnPressOnly(moveLeftHandler)),
             [SE.right]: keyInput.KeyHandler(SE.right, keyInput.OnPressOnly(moveRightHandler)),
-            [SE.ccwRot]: keyInput.KeyHandler(SE.ccwRot, function(){}),
-            [SE.cwRot]: keyInput.KeyHandler(SE.cwRot, function(){}),
+            [SE.ccwRot]: keyInput.KeyHandler(SE.ccwRot, keyInput.OnPressOnly(counterRotHandler)),
+            [SE.cwRot]: keyInput.KeyHandler(SE.cwRot, keyInput.OnPressOnly(clockRotHandler)),
             [SE.sDrop]: keyInput.KeyHandler(SE.sDrop, softDropHandler),
             [SE.hDrop]: keyInput.KeyHandler(SE.hDrop, keyInput.OnPressOnly(hardDropHandler)),
         });
@@ -67,9 +67,8 @@ let Blocks = function(spec) {
     function moveHandler(f, limit) {
         let canMove = true;
         for (let block of Info.falling) {
-            if (block.loc.y < 0 ||
-                    limit(f(block.loc.x)) ||
-                    Info.lines[block.loc.y][f(block.loc.x)]) 
+            if (Info.backedUp || limit(f(block.loc.x)) ||
+                    (block.loc.y >= 0 && Info.lines[block.loc.y][f(block.loc.x)])) 
                 canMove = false;
         };
         if (canMove)
@@ -79,6 +78,23 @@ let Blocks = function(spec) {
         return canMove;
     };
 
+    function clockRotHandler() {
+        //TODO Wall Kick
+        for (let block of Info.falling) {
+            let rX = block.rot.x - block.rLoc.x;
+            let rY = block.rot.y - block.rLoc.y;
+            let offX = Math.floor(rX+rY)-1;
+            let offY = Math.floor(rY-rX);
+            block.loc = {
+                x: block.loc.x+offX,
+                y: block.loc.y+offY,
+            };
+            block.rLoc = {x:block.rLoc.x+offX, y:block.rLoc.y+offY};
+        };
+    };
+
+    function counterRotHandler() {
+    };
 
     function moveLeftHandler() {
         return moveHandler(
@@ -148,6 +164,7 @@ let Blocks = function(spec) {
             block.loc = Object.assign({},rLoc);
             block.loc.x += Math.floor(SG.cols/2)-2;
             block.loc.y -= 2;
+            block.rot = SB.rot[index];
             block.color = settings.colors.blocks[index];
             shape.push(block);
         };
