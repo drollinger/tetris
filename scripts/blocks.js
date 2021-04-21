@@ -25,8 +25,8 @@ let Blocks = function(spec) {
             [SE.right]: keyInput.KeyHandler(SE.right, keyInput.OnPressOnly(moveRightHandler)),
             [SE.ccwRot]: keyInput.KeyHandler(SE.ccwRot, function(){}),
             [SE.cwRot]: keyInput.KeyHandler(SE.cwRot, function(){}),
-            [SE.sDrop]: keyInput.KeyHandler(SE.sDrop, keyInput.OnPressOnly(function(){console.log("working")})),
-            [SE.hDrop]: keyInput.KeyHandler(SE.hDrop, function(){}),
+            [SE.sDrop]: keyInput.KeyHandler(SE.sDrop, softDropHandler),
+            [SE.hDrop]: keyInput.KeyHandler(SE.hDrop, keyInput.OnPressOnly(hardDropHandler)),
         });
     };
 
@@ -34,19 +34,7 @@ let Blocks = function(spec) {
         if (gameInPlay) {
             timer -= elapsedTime;
             if (timer < 0 && !Info.backedUp) {
-                let hitGround = false;
-                for (let block of Info.falling) {
-                    if (block.loc.y+1 >= SG.rows) {
-                        hitGround = true;
-                        break;
-                    }
-                    else if (block.loc.y >= -1 && Info.lines[block.loc.y+1][block.loc.x]) {
-                        hitGround = true;
-                        for (let b of Info.falling)
-                            if (b.loc.y < 0) Info.backedUp = true;
-                        break;
-                    };
-                };
+                let hitGround = fallingHitsFloor();
                 if (hitGround && !Info.backedUp) {
                     for (let block of Info.falling) {
                         Info.lines[block.loc.y][block.loc.x] = true;
@@ -75,32 +63,81 @@ let Blocks = function(spec) {
         Info.backedUp = false;
         dropTime = SB.initDropTime;
     };
-
-    function moveLeftHandler() {
+    
+    function moveHandler(f, limit) {
         let canMove = true;
         for (let block of Info.falling) {
-            if (block.loc.x-1 < 0 || Info.lines[block.loc.y][block.loc.x-1]) 
+            if (block.loc.y < 0 ||
+                    limit(f(block.loc.x)) ||
+                    Info.lines[block.loc.y][f(block.loc.x)]) 
                 canMove = false;
         };
         if (canMove)
             for (let block of Info.falling)
-                block.loc.x--;
+                block.loc.x = f(block.loc.x);
+        
+        return canMove;
+    };
+
+
+    function moveLeftHandler() {
+        return moveHandler(
+            function(item) {return item-1},
+            function(item) {return item < 0}
+        );
     };
 
     function moveRightHandler() {
-        let canMove = true;
+        return moveHandler(
+            function(item) {return item+1},
+            function(item) {return item >= SG.cols}
+        );
+    };
+
+    function hardDropHandler() {
+        let closestRow = SG.rows;
+
+        //Get the Largest relative location
+        let relativeY = 0;
+        for (let block of Info.falling)
+            if (block.rLoc.y > relativeY) relativeY = block.rLoc.y;
+
         for (let block of Info.falling) {
-            if (block.loc.x+1 >= SG.cols || Info.lines[block.loc.y][block.loc.x+1])
-                canMove = false;
+            let startY = block.loc.y > 0 ? block.loc.y : 0;
+            for (let i=startY; i<Info.lines.length; i++) {
+                if (Info.lines[i][block.loc.x] && 
+                        i-block.rLoc.y < closestRow-relativeY) {
+                    closestRow = i;
+                    relativeY = block.rLoc.y;
+                }
+            };
         };
-        if (canMove)
-            for (let block of Info.falling)
-                block.loc.x++;
+        for (let block of Info.falling) {
+            block.loc.y = closestRow-1-(relativeY-block.rLoc.y);
+        };
+        timer = 0;
     };
 
-    function softDropHandler() {
-
+    function softDropHandler(k, elapsedTime) {
+        timer -= SB.softSpeedUp*elapsedTime;
     };
+
+    function fallingHitsFloor() {
+        let hitGround = false;
+        for (let block of Info.falling) {
+            if (block.loc.y+1 >= SG.rows) {
+                hitGround = true;
+                break;
+            }
+            else if (block.loc.y >= -1 && Info.lines[block.loc.y+1][block.loc.x]) {
+                hitGround = true;
+                for (let b of Info.falling)
+                    if (b.loc.y < 0) Info.backedUp = true;
+                break;
+            };
+        };
+        return hitGround;
+    }
 
     function createRandomShape() {
         let index = Math.floor(Math.random()*SB.shapes.length);

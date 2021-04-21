@@ -16,12 +16,13 @@ var settings = {
         rows: 17,
     },
     blocks: {
-        initDropTime: 500,
+        initDropTime: 5000,
+        softSpeedUp: 10,
         shapes: [
             //T
             [{x:0,y:1},{x:1,y:0},{x:1,y:1},{x:2,y:1}],
             //Line
-            [{x:0,y:0},{x:1,y:0},{x:2,y:0},{x:3,y:0}],
+            [{x:0,y:1},{x:1,y:1},{x:2,y:1},{x:3,y:1}],
             //Block
             [{x:1,y:0},{x:1,y:1},{x:2,y:0},{x:2,y:1}],
             //L's
