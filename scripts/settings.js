@@ -1,7 +1,22 @@
+//Shorthand names
+//SST = storage;
+//SE = elements;
+//SB = blocks;
+//SG = grid;
+//SD = dim;
 var settings = {
-    blocks: {
-        dropTime: 500,
+    dim: {
+        width: 25,
+        height: 25,
+    },
+    grid: {
+        startX: 3,
+        startY: 5,
         cols: 10,
+        rows: 17,
+    },
+    blocks: {
+        initDropTime: 10,
         shapes: [
             //T
             [{x:0,y:1},{x:1,y:0},{x:1,y:1},{x:2,y:1}],
@@ -80,3 +95,5 @@ var settings = {
 var SST = settings.storage;
 var SE = settings.elements;
 var SB = settings.blocks;
+var SG = settings.grid;
+var SD = settings.dim;

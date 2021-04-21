@@ -15,6 +15,11 @@ let Graphics = function(spec) {
     imgs.background = createImg(spec.background);
     imgs.block = createImg(spec.block);
 
+    let bWidth = canvas.width/SD.width;
+    let bHeight = canvas.height/SD.height;
+    let gridX = bWidth*SG.startX;
+    let gridY = bHeight*SG.startY;
+
     CanvasRenderingContext2D.prototype.clear = function() {
         this.save();
         this.setTransform(1, 0, 0, 1, 0, 0);
@@ -47,12 +52,16 @@ let Graphics = function(spec) {
             context.imageSmoothingEnabled = false;
             let blocks = spec.blocks.Info.blocks;
             for (let block of blocks) {
-                let x = 100 + 50*block.loc.x;
-                let y = 100 + 50*block.loc.y;
-                let d = 50;
-                context.fillStyle = block.color;
-                context.fillRect(x+1, y+1, d-2, d-2);
-                context.drawImage(imgs.block, x, y, d, d);
+                if (block.loc.y >= 0) {
+                    let x = gridX + bWidth*block.loc.x;
+                    let y = gridY + bHeight*block.loc.y;
+                    let w = bWidth;
+                    let h = bHeight;
+                    context.fillStyle = block.color;
+                    //Rect needs to fit inside block
+                    context.fillRect(x+1, y+1, w-2, h-2);
+                    context.drawImage(imgs.block, x, y, w, h);
+                };
             };
             context.restore();
         };

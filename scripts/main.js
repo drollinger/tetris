@@ -69,6 +69,7 @@ function Initialize() {
     let blocks = Blocks({});
     let gamePlay = GamePlay({
         scores: scores,
+        blocks: blocks,
     });
 
     //Game Input
