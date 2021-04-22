@@ -74,72 +74,24 @@ let Blocks = function(spec) {
         if (canMove)
             for (let block of Info.falling)
                 block.loc.x = f(block.loc.x);
-        
-        return canMove;
     };
 
     function clockRotHandler() {
-        //x and y flipped since on rotation x -> y
-        let floorKick = kick('x');
-        let wallKick = kick('y');
-        for (let block of Info.falling) {
-            let rX = block.rot.x - block.rLoc.x;
-            let rY = block.rot.y - block.rLoc.y;
-            //Save offsets for future use
-            block.offX = Math.floor(rX+rY)-1;
-            block.offY = Math.floor(rY-rX);
-
-            let nXLoc = block.loc.x+block.offX;
-            let nYLoc = block.loc.y+block.offY;
-            if(!wallKick.info.kick && block.loc.y > 0 && (
-                    nXLoc < 0 || nXLoc > SG.cols-1 ||
-                    Info.lines[block.loc.y][nXLoc]))
-                wallKick.update(true, block.offX, block.rLoc.y, getCutOff(rX));
-            
-            if(!floorKick.info.kick && block.offY > 0 && (
-                    nYLoc > SG.rows-1 ||
-                    Info.lines[nYLoc][block.loc.x])) {
-                floorKick.update(true, -1*block.offY, block.rLoc.x, getCutOff(rY));
-            };
-        };
-        let xKick = wallKick.getMaxKick();
-        let yKick = floorKick.getMaxKick();
-
-        let possible = true;
-        for (let block of Info.falling) {
-            let nXLoc = block.loc.x+block.offX+xKick;
-            let nYLoc = block.loc.y+block.offY+yKick;
-            if(nXLoc < 0 || nXLoc > SG.cols-1 ||
-                    nYLoc < 0 || nYLoc > SG.rows-1 ||
-                    Info.lines[nYLoc][nXLoc])
-                possible = false;
-        };
-
-        possible = true;
-
-        if (possible) {
-            for (let block of Info.falling) {
-                block.loc = {
-                    x: block.loc.x+block.offX+xKick,
-                    y: block.loc.y+block.offY+yKick,
-                };
-                block.rLoc = {x:block.rLoc.x+block.offX, y:block.rLoc.y+block.offY};
-            };
-        };
+        rotHandler();
     };
 
     function counterRotHandler() {
     };
 
     function moveLeftHandler() {
-        return moveHandler(
+        moveHandler(
             function(item) {return item-1},
             function(item) {return item < 0}
         );
     };
 
     function moveRightHandler() {
-        return moveHandler(
+        moveHandler(
             function(item) {return item+1},
             function(item) {return item >= SG.cols}
         );
@@ -233,6 +185,56 @@ let Blocks = function(spec) {
             return Math.ceil(v)-1;
         else
             return 0;
+    };
+
+    function rotHandler() {
+        //x and y flipped since on rotation x -> y
+        let wallKick = kick('y');
+        for (let block of Info.falling) {
+            let rX = block.rot.x - block.rLoc.x;
+            let rY = block.rot.y - block.rLoc.y;
+            //Save offsets for future use
+            block.offX = Math.floor(rX+rY)-1;
+            block.offY = Math.floor(rY-rX);
+
+            let nXLoc = block.loc.x+block.offX;
+            let nYLoc = block.loc.y+block.offY;
+            if(!wallKick.info.kick && block.loc.y > 0 && (
+                    nXLoc < 0 || nXLoc > SG.cols-1 ||
+                    Info.lines[block.loc.y][nXLoc]))
+                wallKick.update(true, block.offX, block.rLoc.y, getCutOff(rX));
+            
+        };
+        let xKick = wallKick.getMaxKick();
+        let sign = Math.sign(xKick);
+
+        let possible;
+        for (let i=0; i<=Math.abs(xKick); i++) {
+            possible = true;
+            for (let block of Info.falling) {
+                let nXLoc = block.loc.x+block.offX+sign*i;
+                let nYLoc = block.loc.y+block.offY;
+                if(nXLoc < 0 || nXLoc > SG.cols-1 ||
+                        nYLoc < 0 || nYLoc > SG.rows-1 ||
+                        Info.lines[nYLoc][nXLoc])
+                    possible = false;
+            };
+            if (possible) {
+                xKick = sign*i;
+                break;
+            };
+        };
+
+        if (possible) {
+            for (let block of Info.falling) {
+                block.loc = {
+                    x: block.loc.x+block.offX+xKick,
+                    y: block.loc.y+block.offY,
+                };
+                block.rLoc = {x:block.rLoc.x+block.offX, y:block.rLoc.y+block.offY};
+            };
+        };
+        
     };
 
     function kick(o) {
