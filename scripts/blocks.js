@@ -14,9 +14,12 @@ let Blocks = function(spec) {
         stickyTrees: [],
         stickyFalling: false,
         backedUp: false,
+        dropTime: SB.initDropTime,
     };
-    let dropTime = SB.initDropTime;
-    let timer = dropTime;
+    let timer = Info.dropTime;
+    let cSoft = 0;
+    let softDropping = false;
+
     //Initialize lines tracking
     clearLines();
 
@@ -34,17 +37,20 @@ let Blocks = function(spec) {
     let Update = function(elapsedTime, gameInPlay) {
         if (gameInPlay) {
             timer -= elapsedTime;
+            if (!softDropping) cSoft = 0;
             if (timer < 0 && !Info.backedUp) {
                 if (Info.stickyFalling)
                     dropSticky();
                 else {
                     let hitGround = fallingHitsFloor();
+                    if (softDropping && !hitGround) cSoft++;
                     if (hitGround && !Info.backedUp) {
                         for (let block of Info.falling) {
                             Info.lines[block.loc.y][block.loc.x] = true;
                         }
                         let clearedLines = removeFullLines(Info.falling);
                         Info.falling.length = 0;
+                        Info.incSoftScore(cSoft);
                         if(clearedLines.length > 0) {
                             stickyFall(Math.max(...clearedLines));
                             Info.stickyFalling = true;
@@ -54,9 +60,11 @@ let Blocks = function(spec) {
                             block.loc.y++;
                         };
                     };
+
                 };
-                timer = dropTime;
+                timer = Info.dropTime;
             };
+            softDropping = false;
         };
     };
 
@@ -73,11 +81,12 @@ let Blocks = function(spec) {
         Info.backedUp = false;
         Info.stickyTrees.length = 0;
         Info.stickyFalling = false;
-        dropTime = SB.initDropTime;
+        Info.dropTime = SB.initDropTime;
     };
 
-    let SetLineIncHandler = function(f) {
-        Info.incLinesHandler = f;
+    let SetGamePlayHandlers = function(incLines, softInc) {
+        Info.incLinesHandler = incLines;
+        Info.incSoftScore = softInc;
     };
     
     function moveHandler(f, limit) {
@@ -146,15 +155,21 @@ let Blocks = function(spec) {
                 }
             };
         };
+        let dis = 0;
         for (let block of Info.falling) {
-            block.loc.y = closestRow-1-(relativeY-block.rLoc.y);
+            let nY = closestRow-1-(relativeY-block.rLoc.y)
+            dis = nY-block.loc.y;
+            block.loc.y = nY;
         };
-        timer = 0;
+        //Give scoring as if soft drop
+        Info.incSoftScore(dis);
+        timer = -1;
     };
 
     function softDropHandler(k, elapsedTime) {
         if (!Info.stickyFalling) {
             timer -= SB.softSpeedUp*elapsedTime;
+            softDropping = true;
         };
     };
 
@@ -397,6 +412,7 @@ let Blocks = function(spec) {
 
     function removeFullLines(blockAr) {
         let prevY = [];
+        let linesCleared = 0;
         for (let block of blockAr) {
             let y = block.loc.y;
             if (prevY.indexOf(y) < 0) {
@@ -412,10 +428,11 @@ let Blocks = function(spec) {
                         if (Info.blocks[i].loc.y == y) Info.blocks.splice(i, 1);
                     };
                     prevY.push(y);
-                    Info.incLinesHandler();
+                    linesCleared++;
                 };
             };
         };
+        Info.incLinesHandler(linesCleared);
         return prevY;
     };
 
@@ -425,6 +442,6 @@ let Blocks = function(spec) {
         Update,
         NewBrickFall,
         ResetBoard,
-        SetLineIncHandler,
+        SetGamePlayHandlers,
     };
 }

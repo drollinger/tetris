@@ -48,25 +48,24 @@ let Graphics = function(spec) {
 
     let RenderGameInfo = function(spec) {
         let info = spec.gamePlay.Info;
-
         let color = settings.colors.plainText;
-        context.font = settings.fonts.plainText;
-
+        let fontSize = Math.floor(settings.fonts.plainText.size*Math.min(bWidth, bHeight));
+        context.font = fontSize.toString()+"px "+settings.fonts.plainText.font;
         screenText(color,
             "Score:", info.score, 
-            SL.score, SL.widths.gameInfo
+            SL.score, SL.widths.gameInfo,
         );
         screenText(color,
             "Lines:", info.lines, 
-            SL.lines, SL.widths.gameInfo
+            SL.lines, SL.widths.gameInfo, 
         );
         screenText(color,
             "Next:", "", 
-            SL.next, SL.widths.gameInfo
+            SL.next, SL.widths.gameInfo,
         );
         screenText(color,
-            "Level:", info.level, 
-            SL.level, SL.widths.gameInfo
+            "Level:", info.level,
+            SL.level, SL.widths.gameInfo,
         );
     };
 
@@ -146,10 +145,15 @@ let Graphics = function(spec) {
     function screenText(color, lText, rText, loc, width) {
             context.save();
             context.fillStyle = color;
-            //context.shadowOffsetX = 0;
-            //context.shadowOffsetY = 0;
-            //context.shadowBlur = 5;
-            //context.shadowColor = color;
+            context.shadowOffsetX = 0;
+            context.shadowOffsetY = 0;
+            context.shadowBlur = 5;
+            context.shadowColor = color;
+            context.textAlign = "left";
+            context.fillText(lText, bWidth*loc.x, bHeight*loc.y);
+            context.textAlign = "right";
+            context.fillText(rText, bWidth*(loc.x+width), bHeight*loc.y);
+            context.shadowBlur = 0;
             context.textAlign = "left";
             context.fillText(lText, bWidth*loc.x, bHeight*loc.y);
             context.textAlign = "right";

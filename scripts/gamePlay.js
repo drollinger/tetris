@@ -10,12 +10,12 @@
 let GamePlay = function(spec) {
     let scores = spec.scores;
     let blocks = spec.blocks;
-    blocks.SetLineIncHandler(incLines);
+    blocks.SetGamePlayHandlers(incLines, softDropScore);
 
     let Info = {
         score: 0,
         lines: 0,
-        level: 1,
+        level: 0,
         started: false,
     };
 
@@ -26,6 +26,8 @@ let GamePlay = function(spec) {
                 blocks.ResetBoard();
                 blocks.NewBrickFall();
                 Info.started = true;
+            }
+            else {
             };
         };
     };
@@ -33,12 +35,38 @@ let GamePlay = function(spec) {
     let RestartGameHandler = function() {
         Info.score = 0;
         Info.lines = 0;
-        Info.level = 1;
+        Info.level = 0;
         Info.started = false;
     };
 
-    function incLines() {
-        Info.lines++;
+    function incLines(lines) {
+        Info.lines += lines;
+
+        //Set new level
+        Info.level = Math.floor(Info.lines/SB.linesPerLevel);
+
+        //Add scoring
+        //Scoring is the Original Nintendo Scoring System
+        let mult = 0;
+        if (lines == 1) mult = 40;
+        else if (lines == 2) mult = 50;
+        else if (lines == 3) mult = 100;
+        else if (lines >= 4) mult = 300;
+        Info.score += lines*mult*(Info.level+1);
+
+        //Set drop time
+        let dt = blocks.Info.dropTime;
+        dt = SB.initDropTime-(SB.dropDec*Info.level);
+        if (dt < SB.dropLow) dt = SB.dropLow;
+        blocks.Info.dropTime = dt;
+    };
+
+    function softDropScore(score) {
+        //Scoring of the Original Nintendo Scoring System
+        // awards a point for each continuous soft drop
+        // hard drop is not mentioned but is counted as if
+        // soft dropped the whole way
+        Info.score += score;
     };
 
     return {

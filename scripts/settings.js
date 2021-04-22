@@ -10,11 +10,11 @@ var settings = {
         width: 25,
         height: 25,
     },
-    loc: {
-        score: {x: 17, y: 5},
-        lines: {x: 17, y: 7},
-        next: {x: 17, y: 13},
-        level: {x: 17, y: 21},
+    loc: { //y is the base line of text
+        score: {x: 17, y: 6},
+        lines: {x: 17, y: 7.5},
+        next: {x: 17, y: 13.5},
+        level: {x: 17, y: 21.75},
         widths: {
             gameInfo: 5,
         },
@@ -26,8 +26,11 @@ var settings = {
         rows: 17,
     },
     blocks: {
-        initDropTime: 500,
-        softSpeedUp: 10,
+        initDropTime: 700,
+        dropDec: 45,
+        dropLow: 80,
+        linesPerLevel: 10,
+        softSpeedUp: 12,
         shapes: [
             //T
             [{x:0,y:1},{x:1,y:0},{x:1,y:1},{x:2,y:1}],
@@ -66,7 +69,7 @@ var settings = {
         block: 'images/block.png',
     },
     fonts: {
-        plainText: "25px CalculatorRegular",
+        plainText: {size:1, font:"CalculatorRegular"},
     },
     sounds: {
     },
