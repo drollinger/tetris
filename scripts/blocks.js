@@ -15,6 +15,7 @@ let Blocks = function(spec) {
         stickyFalling: false,
         backedUp: false,
         dropTime: SB.initDropTime,
+        nextShape: createRandomShape(),
     };
     let timer = Info.dropTime;
     let cSoft = 0;
@@ -69,9 +70,9 @@ let Blocks = function(spec) {
     };
 
     let NewBrickFall = function() {
-        let newShape = createRandomShape();
-        Info.blocks = Info.blocks.concat(newShape);
-        Info.falling = newShape;
+        Info.blocks = Info.blocks.concat(Info.nextShape);
+        Info.falling = Info.nextShape;
+        Info.nextShape = createRandomShape();
     };
 
     let ResetBoard = function() {

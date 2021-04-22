@@ -73,8 +73,7 @@ let Graphics = function(spec) {
         if (imgs.block.isReady) {
             context.save();
             context.imageSmoothingEnabled = false;
-            let blocks = spec.blocks.Info.blocks;
-            for (let block of blocks) {
+            for (let block of spec.blocks.Info.blocks) {
                 if (block.loc.y >= 0) {
                     let x = gridX + bWidth*block.loc.x;
                     let y = gridY + bHeight*block.loc.y;
@@ -85,6 +84,16 @@ let Graphics = function(spec) {
                     context.fillRect(x+1, y+1, w-2, h-2);
                     context.drawImage(imgs.block, x, y, w, h);
                 };
+            };
+            for (let block of spec.blocks.Info.nextShape) {
+                    let nw = bWidth*SL.next.scale;
+                    let nh = bHeight*SL.next.scale;
+                    let x = bWidth*(SL.next.x+(SL.next.scale*block.rLoc.x)+2.25);
+                    let y = bHeight*(SL.next.y+(SL.next.scale*block.rLoc.y));
+                    context.fillStyle = block.color;
+                    //Rect needs to fit inside block
+                    context.fillRect(x+1, y+1, nw-2, nh-2);
+                    context.drawImage(imgs.block, x, y, nw, nh);
             };
             context.restore();
         };

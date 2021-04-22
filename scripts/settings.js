@@ -13,7 +13,7 @@ var settings = {
     loc: { //y is the base line of text
         score: {x: 17, y: 6},
         lines: {x: 17, y: 7.5},
-        next: {x: 17, y: 13.5},
+        next: {x: 17, y: 13.5, scale: 0.7},
         level: {x: 17, y: 21.75},
         widths: {
             gameInfo: 5,
