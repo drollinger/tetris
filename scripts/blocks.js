@@ -11,6 +11,8 @@ let Blocks = function(spec) {
         blocks: [],
         lines: [],
         falling: [],
+        stickyTrees: [],
+        stickyFalling: false,
         backedUp: false,
     };
     let oldDT;
@@ -34,35 +36,24 @@ let Blocks = function(spec) {
         if (gameInPlay) {
             timer -= elapsedTime;
             if (timer < 0 && !Info.backedUp) {
-                let hitGround = fallingHitsFloor();
-                if (hitGround && !Info.backedUp) {
-                    for (let block of Info.falling) {
-                        Info.lines[block.loc.y][block.loc.x] = true;
-                    }
-                    let prevY = [];
-                    for (let block of Info.falling) {
-                        let y = block.loc.y;
-                        if (prevY.indexOf(y) < 0) {
-                            let lineClear = true;
-                            for (let l of Info.lines[y]) {
-                                if (!l) lineClear = false;
-                            };
-                            if (lineClear) {
-                                for (let i=0; i<Info.lines[y].length; i++) {
-                                    Info.lines[y][i] = false;
-                                };
-                                for (let i=Info.blocks.length-1; i>=0; i--) {
-                                    if (Info.blocks[i].loc.y == y) Info.blocks.splice(i, 1);
-                                };
-                                prevY.push(y);
-                            };
+                if (Info.stickyFalling)
+                    dropSticky();
+                else {
+                    let hitGround = fallingHitsFloor();
+                    if (hitGround && !Info.backedUp) {
+                        for (let block of Info.falling) {
+                            Info.lines[block.loc.y][block.loc.x] = true;
+                        }
+                        let clearedLines = removeFullLines(Info.falling);
+                        Info.falling.length = 0;
+                        if(clearedLines.length > 0) {
+                            stickyFall(Math.max(...clearedLines));
+                            Info.stickyFalling = true;
+                        } else NewBrickFall();
+                    } else if (!hitGround){
+                        for (let block of Info.falling) {
+                            block.loc.y++;
                         };
-                    };
-                    if(prevY.length > 0) stickyFall(Math.max(...prevY));
-                    NewBrickFall();
-                } else if (!hitGround){
-                    for (let block of Info.falling) {
-                        block.loc.y++;
                     };
                 };
                 timer = dropTime;
@@ -81,6 +72,8 @@ let Blocks = function(spec) {
         Info.falling.length = 0;
         clearLines();
         Info.backedUp = false;
+        Info.stickyTrees.length = 0;
+        Info.stickyFalling = false;
         dropTime = SB.initDropTime;
     };
     
@@ -157,7 +150,9 @@ let Blocks = function(spec) {
     };
 
     function softDropHandler(k, elapsedTime) {
-        timer -= SB.softSpeedUp*elapsedTime;
+        if (!Info.stickyFalling) {
+            timer -= SB.softSpeedUp*elapsedTime;
+        };
     };
 
     function fallingHitsFloor() {
@@ -339,38 +334,46 @@ let Blocks = function(spec) {
                 for (let tree of treeAr) {
                     if (tree[block.loc.y]?.[block.loc.x] !== undefined) {
                         tree[block.loc.y][block.loc.x] = block;
-                        Info.blocks.splice(b, 1);
                     };
                 };
             };
         };
 
-        let subtracted = true;
-        while(subtracted) {
-            subtracted = false;
-            for (let t=treeAr.length-1; t>=0; t--) {
-                let hitGround = treeHitsFloor(treeAr[t]);
-                if (!hitGround) {
-                    subtracted = true;
-                    let updatedTree = {};
-                    for (const [y, subTree] of Object.entries(treeAr[t])) {
-                        updatedTree[parseInt(y)+1] = {};
-                        for (const [x, block] of Object.entries(subTree)) {
-                            updatedTree[parseInt(y)+1][parseInt(x)] = block;
-                        };
+        Info.stickyTrees = treeAr;
+    };
+
+    function dropSticky() {
+        let treeAr = Info.stickyTrees;
+        for (let t=treeAr.length-1; t>=0; t--) {
+            if (treeHitsFloor(treeAr[t])) {
+                let fallingBlocks = [];
+                for (const [y, subTree] of Object.entries(treeAr[t])) {
+                    for (const [x, block] of Object.entries(subTree)) {
+                        Info.lines[parseInt(y)][parseInt(x)] = true;
+                        fallingBlocks.push(block);
                     };
-                    treeAr[t] = updatedTree;
-                } else {
-                    for (const [y, subTree] of Object.entries(treeAr[t])) {
-                        for (const [x, block] of Object.entries(subTree)) {
-                            block.loc.y = parseInt(y);
-                            Info.blocks.push(block);
-                            Info.lines[parseInt(y)][parseInt(x)] = true;
-                        };
-                    };
-                    treeAr.splice(t, 1);
                 };
+                let clearedLines = removeFullLines(fallingBlocks);
+                if(clearedLines.length > 0) {
+                    stickyFall(Math.max(...clearedLines));
+                    Info.stickyFalling = true;
+                } else treeAr.splice(t, 1);
+            } else {
+                let updatedTree = {};
+                for (const [y, subTree] of Object.entries(treeAr[t])) {
+                    updatedTree[parseInt(y)+1] = {};
+                    for (const [x, block] of Object.entries(subTree)) {
+                        block.loc.y++;
+                        updatedTree[parseInt(y)+1][parseInt(x)] = block;
+                    };
+                };
+                treeAr[t] = updatedTree;
             };
+        };
+
+        if (treeAr.length === 0) {
+            Info.stickyFalling = false;
+            NewBrickFall();
         };
     };
 
@@ -387,6 +390,29 @@ let Blocks = function(spec) {
             createRecTree(i, j+1, tree);
             createRecTree(i, j-1, tree);
         };
+    };
+
+    function removeFullLines(blockAr) {
+        let prevY = [];
+        for (let block of blockAr) {
+            let y = block.loc.y;
+            if (prevY.indexOf(y) < 0) {
+                let lineClear = true;
+                for (let l of Info.lines[y]) {
+                    if (!l) lineClear = false;
+                };
+                if (lineClear) {
+                    for (let i=0; i<Info.lines[y].length; i++) {
+                        Info.lines[y][i] = false;
+                    };
+                    for (let i=Info.blocks.length-1; i>=0; i--) {
+                        if (Info.blocks[i].loc.y == y) Info.blocks.splice(i, 1);
+                    };
+                    prevY.push(y);
+                };
+            };
+        };
+        return prevY;
     };
 
     return {
