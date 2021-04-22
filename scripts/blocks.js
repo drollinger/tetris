@@ -77,10 +77,25 @@ let Blocks = function(spec) {
     };
 
     function clockRotHandler() {
-        rotHandler();
+        rotHandler(
+            function(rX, rY) {
+                return Math.floor(rX+rY)-1;
+            },
+            function(rX, rY) {
+                return Math.floor(rY-rX);
+            }
+        );
     };
 
     function counterRotHandler() {
+        rotHandler(
+            function(rX, rY) {
+                return Math.floor(rX-rY);
+            },
+            function(rX, rY) {
+                return Math.floor(rY+rX)-1;
+            }
+        );
     };
 
     function moveLeftHandler() {
@@ -187,19 +202,19 @@ let Blocks = function(spec) {
             return 0;
     };
 
-    function rotHandler() {
+    function rotHandler(calcOffX, calcOffY) {
         //x and y flipped since on rotation x -> y
         let wallKick = kick('y');
         for (let block of Info.falling) {
             let rX = block.rot.x - block.rLoc.x;
             let rY = block.rot.y - block.rLoc.y;
             //Save offsets for future use
-            block.offX = Math.floor(rX+rY)-1;
-            block.offY = Math.floor(rY-rX);
+            block.offX = calcOffX(rX, rY);
+            block.offY = calcOffY(rX, rY);
 
             let nXLoc = block.loc.x+block.offX;
             let nYLoc = block.loc.y+block.offY;
-            if(!wallKick.info.kick && block.loc.y > 0 && (
+            if(!wallKick.info.kick && block.loc.y >= 0 && (
                     nXLoc < 0 || nXLoc > SG.cols-1 ||
                     Info.lines[block.loc.y][nXLoc]))
                 wallKick.update(true, block.offX, block.rLoc.y, getCutOff(rX));
@@ -234,7 +249,6 @@ let Blocks = function(spec) {
                 block.rLoc = {x:block.rLoc.x+block.offX, y:block.rLoc.y+block.offY};
             };
         };
-        
     };
 
     function kick(o) {
