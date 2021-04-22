@@ -16,7 +16,7 @@ var settings = {
         rows: 17,
     },
     blocks: {
-        initDropTime: 100000,
+        initDropTime: 50000,
         softSpeedUp: 1000,
         shapes: [
             //T

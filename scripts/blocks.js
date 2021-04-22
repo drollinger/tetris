@@ -39,12 +39,32 @@ let Blocks = function(spec) {
                     for (let block of Info.falling) {
                         Info.lines[block.loc.y][block.loc.x] = true;
                     }
+                    let prevY = [];
+                    for (let block of Info.falling) {
+                        let y = block.loc.y;
+                        if (prevY.indexOf(y) < 0) {
+                            let lineClear = true;
+                            for (let l of Info.lines[y]) {
+                                if (!l) lineClear = false;
+                            };
+                            if (lineClear) {
+                                for (let i=0; i<Info.lines[y].length; i++) {
+                                    Info.lines[y][i] = false;
+                                };
+                                for (let i=Info.blocks.length-1; i>=0; i--) {
+                                    if (Info.blocks[i].loc.y == y) Info.blocks.splice(i, 1);
+                                };
+                                prevY.push(y);
+                            };
+                        };
+                    };
+                    if(prevY.length > 0) stickyFall(Math.max(...prevY));
                     NewBrickFall();
                 } else if (!hitGround){
                     for (let block of Info.falling) {
                         block.loc.y++;
                     };
-                }
+                };
                 timer = dropTime;
             };
         };
@@ -152,6 +172,23 @@ let Blocks = function(spec) {
                 for (let b of Info.falling)
                     if (b.loc.y < 0) Info.backedUp = true;
                 break;
+            };
+        };
+        return hitGround;
+    }
+
+    function treeHitsFloor(tree) {
+        let hitGround = false;
+        for (const [y, subTree] of Object.entries(tree)) {
+            for (const [x, block] of Object.entries(subTree)) {
+                if (parseInt(y)+1 >= SG.rows) {
+                    hitGround = true;
+                    break;
+                }
+                else if (Info.lines[parseInt(y)+1][parseInt(x)]) {
+                    hitGround = true;
+                    break;
+                };
             };
         };
         return hitGround;
@@ -280,6 +317,76 @@ let Blocks = function(spec) {
         };
 
         return ({info, getMaxKick, update});
+    };
+
+    function stickyFall(minY) {
+        let treeAr = [];
+        //Go through all lines until true
+        for (let j=minY-1; j>=0; j--) {
+            for (let i=0; i<Info.lines[j].length; i++) {
+                if(Info.lines[j][i]) {
+                    let tree = {};
+                    createRecTree(i, j, tree);
+                    treeAr = treeAr.concat(tree);
+                };
+            };
+        };
+
+        //Go through all blocks
+        for (let b=Info.blocks.length-1; b>=0; b--) {
+            let block = Info.blocks[b];
+            if (block.loc.y < minY) {
+                for (let tree of treeAr) {
+                    if (tree[block.loc.y]?.[block.loc.x] !== undefined) {
+                        tree[block.loc.y][block.loc.x] = block;
+                        Info.blocks.splice(b, 1);
+                    };
+                };
+            };
+        };
+
+        let subtracted = true;
+        while(subtracted) {
+            subtracted = false;
+            for (let t=treeAr.length-1; t>=0; t--) {
+                let hitGround = treeHitsFloor(treeAr[t]);
+                if (!hitGround) {
+                    subtracted = true;
+                    let updatedTree = {};
+                    for (const [y, subTree] of Object.entries(treeAr[t])) {
+                        updatedTree[parseInt(y)+1] = {};
+                        for (const [x, block] of Object.entries(subTree)) {
+                            updatedTree[parseInt(y)+1][parseInt(x)] = block;
+                        };
+                    };
+                    treeAr[t] = updatedTree;
+                } else {
+                    for (const [y, subTree] of Object.entries(treeAr[t])) {
+                        for (const [x, block] of Object.entries(subTree)) {
+                            block.loc.y = parseInt(y);
+                            Info.blocks.push(block);
+                            Info.lines[parseInt(y)][parseInt(x)] = true;
+                        };
+                    };
+                    treeAr.splice(t, 1);
+                };
+            };
+        };
+    };
+
+    function createRecTree(i, j, tree) {
+        if (i >= 0 && i < SG.cols &&
+                j >= 0 && j < SG.rows &&
+                Info.lines[j][i]) {
+            if(tree[j] == undefined) tree[j] = {};
+            tree[j][i] = {};
+            Info.lines[j][i] = false;
+
+            createRecTree(i+1, j, tree);
+            createRecTree(i-1, j, tree);
+            createRecTree(i, j+1, tree);
+            createRecTree(i, j-1, tree);
+        };
     };
 
     return {
