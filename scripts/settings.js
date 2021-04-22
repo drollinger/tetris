@@ -4,10 +4,20 @@
 //SB = blocks;
 //SG = grid;
 //SD = dim;
+//SL = loc;
 var settings = {
     dim: {
         width: 25,
         height: 25,
+    },
+    loc: {
+        score: {x: 17, y: 5},
+        lines: {x: 17, y: 7},
+        next: {x: 17, y: 13},
+        level: {x: 17, y: 21},
+        widths: {
+            gameInfo: 5,
+        },
     },
     grid: {
         startX: 3,
@@ -55,6 +65,9 @@ var settings = {
         background: 'images/background.png',
         block: 'images/block.png',
     },
+    fonts: {
+        plainText: "25px CalculatorRegular",
+    },
     sounds: {
     },
     colors: {
@@ -67,6 +80,7 @@ var settings = {
             'rgba(84, 227, 70, 1)',
             'rgba(255, 210, 113, 1)',
         ],
+        plainText: "rgba(255, 250, 212,1)",
     },
     sections: {
         main: 'mainMenuSection',
@@ -112,3 +126,4 @@ var SE = settings.elements;
 var SB = settings.blocks;
 var SG = settings.grid;
 var SD = settings.dim;
+var SL = settings.loc;

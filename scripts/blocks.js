@@ -15,7 +15,6 @@ let Blocks = function(spec) {
         stickyFalling: false,
         backedUp: false,
     };
-    let oldDT;
     let dropTime = SB.initDropTime;
     let timer = dropTime;
     //Initialize lines tracking
@@ -75,6 +74,10 @@ let Blocks = function(spec) {
         Info.stickyTrees.length = 0;
         Info.stickyFalling = false;
         dropTime = SB.initDropTime;
+    };
+
+    let SetLineIncHandler = function(f) {
+        Info.incLinesHandler = f;
     };
     
     function moveHandler(f, limit) {
@@ -409,6 +412,7 @@ let Blocks = function(spec) {
                         if (Info.blocks[i].loc.y == y) Info.blocks.splice(i, 1);
                     };
                     prevY.push(y);
+                    Info.incLinesHandler();
                 };
             };
         };
@@ -421,5 +425,6 @@ let Blocks = function(spec) {
         Update,
         NewBrickFall,
         ResetBoard,
+        SetLineIncHandler,
     };
 }

@@ -46,6 +46,9 @@ function main() {
             gettingNextKey:keyInput.GettingNextKey(),
             buttons:keyInput.IdToKey,
         });
+        graphics.RenderGameInfo({
+            gamePlay:gamePlay
+        });
         graphics.RenderGamePlay({
             gamePlay:gamePlay
         });

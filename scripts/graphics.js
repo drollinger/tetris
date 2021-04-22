@@ -46,6 +46,30 @@ let Graphics = function(spec) {
         let info = spec.gamePlay.Info;
     };
 
+    let RenderGameInfo = function(spec) {
+        let info = spec.gamePlay.Info;
+
+        let color = settings.colors.plainText;
+        context.font = settings.fonts.plainText;
+
+        screenText(color,
+            "Score:", info.score, 
+            SL.score, SL.widths.gameInfo
+        );
+        screenText(color,
+            "Lines:", info.lines, 
+            SL.lines, SL.widths.gameInfo
+        );
+        screenText(color,
+            "Next:", "", 
+            SL.next, SL.widths.gameInfo
+        );
+        screenText(color,
+            "Level:", info.level, 
+            SL.level, SL.widths.gameInfo
+        );
+    };
+
     let RenderBlocks = function(spec) {
         if (imgs.block.isReady) {
             context.save();
@@ -119,10 +143,25 @@ let Graphics = function(spec) {
         return newImg;
     };
 
+    function screenText(color, lText, rText, loc, width) {
+            context.save();
+            context.fillStyle = color;
+            //context.shadowOffsetX = 0;
+            //context.shadowOffsetY = 0;
+            //context.shadowBlur = 5;
+            //context.shadowColor = color;
+            context.textAlign = "left";
+            context.fillText(lText, bWidth*loc.x, bHeight*loc.y);
+            context.textAlign = "right";
+            context.fillText(rText, bWidth*(loc.x+width), bHeight*loc.y);
+            context.restore();
+        };
+
     return {
         Clear,
         RenderBackground,
         RenderGamePlay,
+        RenderGameInfo,
         RenderBlocks,
         RenderCustomControls,
         RenderHighscores,
