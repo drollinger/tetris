@@ -70,7 +70,7 @@ let Input = function() {
                 gettingNextKey = true;
                 clickAssign = function(key) {
                     if (key != 'Escape') {
-                        RegisterCommand([key], handlers[key]);
+                        RegisterCommand([key], handlers[IdToKey[id]]);
                         UnregisterKey(IdToKey[id]);
                         IdToKey[id] = key;
                         localStorage[settings.storage.name+`.${id}`] = key;
