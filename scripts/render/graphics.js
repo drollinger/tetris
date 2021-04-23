@@ -10,11 +10,6 @@ let Graphics = function(spec) {
     let canvas = document.getElementById(settings.elements.canvas);
     let context = canvas.getContext('2d');
 
-    //Load all images
-    let imgs = {};
-    imgs.background = createImg(spec.background);
-    imgs.block = createImg(spec.block);
-
     let bWidth = canvas.width/SD.width;
     let bHeight = canvas.height/SD.height;
     let gridX = bWidth*SG.startX;
@@ -32,14 +27,12 @@ let Graphics = function(spec) {
     };
 
     let RenderBackground = function() {
-        if (imgs.background.isReady) {
-            context.save();
-            context.imageSmoothingEnabled = false;
-            context.drawImage(imgs.background, 0, 0,
-                canvas.width + 0.5, canvas.height + 0.5
-            );
-            context.restore();
-        };
+       context.save();
+       context.imageSmoothingEnabled = false;
+       context.drawImage(GameAssets['background'], 0, 0,
+           canvas.width + 0.5, canvas.height + 0.5
+       );
+       context.restore();
     };
 
     let RenderGamePlay = function(spec) {
@@ -95,33 +88,31 @@ let Graphics = function(spec) {
     };
 
     let RenderBlocks = function(spec) {
-        if (imgs.block.isReady) {
-            context.save();
-            context.imageSmoothingEnabled = false;
-            for (let block of spec.blocks.Info.blocks) {
-                if (block.loc.y >= 0) {
-                    let x = gridX + bWidth*block.loc.x;
-                    let y = gridY + bHeight*block.loc.y;
-                    let w = bWidth;
-                    let h = bHeight;
-                    context.fillStyle = block.color;
-                    //Rect needs to fit inside block
-                    context.fillRect(x+1, y+1, w-2, h-2);
-                    context.drawImage(imgs.block, x, y, w, h);
-                };
+        context.save();
+        context.imageSmoothingEnabled = false;
+        for (let block of spec.blocks.Info.blocks) {
+            if (block.loc.y >= 0) {
+                let x = gridX + bWidth*block.loc.x;
+                let y = gridY + bHeight*block.loc.y;
+                let w = bWidth;
+                let h = bHeight;
+                context.fillStyle = block.color;
+                //Rect needs to fit inside block
+                context.fillRect(x+1, y+1, w-2, h-2);
+                context.drawImage(GameAssets['block'], x, y, w, h);
             };
-            for (let block of spec.blocks.Info.nextShape) {
-                    let nw = bWidth*SL.next.scale;
-                    let nh = bHeight*SL.next.scale;
-                    let x = bWidth*(SL.next.x+(SL.next.scale*block.rLoc.x)+2.25);
-                    let y = bHeight*(SL.next.y+(SL.next.scale*block.rLoc.y));
-                    context.fillStyle = block.color;
-                    //Rect needs to fit inside block
-                    context.fillRect(x+1, y+1, nw-2, nh-2);
-                    context.drawImage(imgs.block, x, y, nw, nh);
-            };
-            context.restore();
         };
+        for (let block of spec.blocks.Info.nextShape) {
+                let nw = bWidth*SL.next.scale;
+                let nh = bHeight*SL.next.scale;
+                let x = bWidth*(SL.next.x+(SL.next.scale*block.rLoc.x)+2.25);
+                let y = bHeight*(SL.next.y+(SL.next.scale*block.rLoc.y));
+                context.fillStyle = block.color;
+                //Rect needs to fit inside block
+                context.fillRect(x+1, y+1, nw-2, nh-2);
+                context.drawImage(GameAssets['block'], x, y, nw, nh);
+        };
+        context.restore();
     };
 
     let RenderCustomControls = function(spec) {

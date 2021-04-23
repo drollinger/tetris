@@ -83,10 +83,7 @@ function Initialize() {
     blocks.InitBlockHandlers(keyInput);
 
     //Game Graphics
-    let graphics = Graphics({
-        background: settings.images.background,
-        block: settings.images.block,
-    });
+    let graphics = Graphics({});
 
     return [
         graphics,

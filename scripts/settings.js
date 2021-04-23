@@ -65,10 +65,6 @@ var settings = {
         name: 'drollTetris',
         highscores: 'drollTetris.highScores',
     },
-    images: {
-        background: 'images/background.png',
-        block: 'images/block.png',
-    },
     fonts: {
         plainText: {size:1, font:"CalculatorRegular"},
         gameOver: {size:1, font:"Comic Sans MS"},
