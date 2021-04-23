@@ -1,3 +1,4 @@
+//This code was written by Dr. Phillips and slightly adapted by Dallin Drollinger
 'use strict';
 var GameAssets = {};
 let scriptOrder = [
