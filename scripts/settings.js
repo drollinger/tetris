@@ -26,12 +26,12 @@ var settings = {
         rows: 17,
     },
     blocks: {
-        initDropTime: 700,
-        dropDec: 45,
-        dropLow: 80,
+        initDropTime: 600,
+        dropDec: 35,
+        dropLow: 100,
         linesPerLevel: 10,
         softSpeedUp: 12,
-        gameOverTime: 3500,
+        gameOverTime: 3000,
         shapes: [
             //T
             [{x:0,y:1},{x:1,y:0},{x:1,y:1},{x:2,y:1}],

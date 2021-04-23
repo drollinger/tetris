@@ -46,6 +46,7 @@ let Blocks = function(spec) {
                     let hitGround = fallingHitsFloor();
                     if (softDropping && !hitGround) cSoft++;
                     if (hitGround && !Info.backedUp) {
+                        GameAssets['fall'].play();
                         for (let block of Info.falling) {
                             Info.lines[block.loc.y][block.loc.x] = true;
                         }
@@ -184,6 +185,7 @@ let Blocks = function(spec) {
             }
             else if (block.loc.y >= -1 && Info.lines[block.loc.y+1][block.loc.x]) {
                 hitGround = true;
+                GameAssets['fall'].play();
                 for (let b of Info.falling)
                     if (b.loc.y < 0) Info.backedUp = true;
                 break;
@@ -197,10 +199,12 @@ let Blocks = function(spec) {
         for (const [y, subTree] of Object.entries(tree)) {
             for (const [x, block] of Object.entries(subTree)) {
                 if (parseInt(y)+1 >= SG.rows) {
+                    GameAssets['fall'].play();
                     hitGround = true;
                     break;
                 }
                 else if (Info.lines[parseInt(y)+1][parseInt(x)]) {
+                    GameAssets['fall'].play();
                     hitGround = true;
                     break;
                 };
@@ -293,6 +297,9 @@ let Blocks = function(spec) {
         };
 
         if (possible) {
+            GameAssets['selection'].volume = 0.5;
+            GameAssets['selection'].currentTime = 0;
+            GameAssets['selection'].play();
             for (let block of Info.falling) {
                 block.loc = {
                     x: block.loc.x+block.offX+xKick,
@@ -434,6 +441,7 @@ let Blocks = function(spec) {
                 };
             };
         };
+        if(prevY.length > 0) GameAssets['lineClear'].play();
         Info.incLinesHandler(linesCleared);
         return prevY;
     };

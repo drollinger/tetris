@@ -25,6 +25,7 @@ let GamePlay = function(spec) {
     let Update = function(elapsedTime, menuing) {
         let gameInPlay = menuing.GameInPlay();
         if (gameInPlay) {
+            if (Info.started && !Info.gameOver && GameAssets['inGameMusic'].paused) GameAssets['inGameMusic'].play();
             if (Info.endCount < 0) {
                 menuing.GoToMainMenu();
                 //Save High Score
@@ -33,17 +34,24 @@ let GamePlay = function(spec) {
                 if (scores.highscores.length > 5) scores.highscores = scores.highscores.slice(0, 5);
                 localStorage[SST.highscores] = scores.highscores;
                 RestartGameHandler();
+                GameAssets['titleMusic'].currentTime = 0;
+                GameAssets['titleMusic'].play();
             }
             else if (!Info.started) {
                 blocks.ResetBoard();
                 blocks.NewBrickFall();
                 Info.started = true;
+                GameAssets['inGameMusic'].play();
             }
             else if(blocks.Info.backedUp) {
-                Info.gameOver = true;
-                Info.endCount -= elapsedTime;
+                if (!Info.gameOver) {
+                    Info.gameOver = true;
+                    GameAssets['inGameMusic'].pause();
+                    GameAssets['gameOver'].play();
+                }
+                else Info.endCount -= elapsedTime;
             }
-        };
+        }
     };
 
     let RestartGameHandler = function() {
@@ -53,6 +61,9 @@ let GamePlay = function(spec) {
         Info.started = false;
         Info.gameOver = false;
         Info.endCount = SB.gameOverTime;
+        GameAssets['inGameMusic'].currentTime = 0;
+        GameAssets['inGameMusic'].volume = 1;
+        GameAssets['inGameMusic'].playbackRate=1;
     };
 
     function incLines(lines) {
@@ -75,6 +86,8 @@ let GamePlay = function(spec) {
         dt = SB.initDropTime-(SB.dropDec*Info.level);
         if (dt < SB.dropLow) dt = SB.dropLow;
         blocks.Info.dropTime = dt;
+
+        GameAssets['inGameMusic'].playbackRate=1+(Info.level*0.01);
     };
 
     function softDropScore(score) {

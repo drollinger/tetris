@@ -6,7 +6,6 @@ let scriptOrder = [
     newScript('gameObjects/blocks'),
     newScript('gameObjects/menuing'),
     newScript('gameObjects/gamePlay'),
-    newScript('render/audio'),
     newScript('render/graphics'),
     newScript('render/particles'),
     newScript('input/input'),
@@ -19,6 +18,24 @@ let assetOrder = [{
     }, {
         key: 'block',
         source: '/images/block.png'
+    }, {
+        key: 'lineClear',
+        source: '/audio/clear.wav'
+    }, {
+        key: 'fall',
+        source: '/audio/fall.wav'
+    }, {
+        key: 'gameOver',
+        source: '/audio/gameover.wav'
+    }, {
+        key: 'inGameMusic',
+        source: '/audio/ingame.mp3'
+    }, {
+        key: 'titleMusic',
+        source: '/audio/title.mp3'
+    }, {
+        key: 'selection',
+        source: '/audio/selection.wav'
     }
 ];
 
@@ -107,7 +124,7 @@ function loadAsset(source, onSuccess, onError) {
             if (xhr.status === 200) {
                 if (fileExtension === 'png' || fileExtension === 'jpg') {
                     asset = new Image();
-                } else if (fileExtension === 'mp3') {
+                } else if (fileExtension === 'mp3' || fileExtension === 'wav') {
                     asset = new Audio();
                 } else {
                     if (onError) { onError('Unknown file extension: ' + fileExtension); }

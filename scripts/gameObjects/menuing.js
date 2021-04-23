@@ -17,18 +17,24 @@ let Menuing = function() {
     let InitMenuHandlers = function(keyInput, gamePlay) {
         document.getElementById(settings.elements.resume).addEventListener(
             'click', function() {
+                GameAssets['inGameMusic'].volume = 1;
                 toggleMenu(settings.sections.canvas);
                 curState = states.GAME;
             }
         );
         document.getElementById(settings.elements.exit).addEventListener(
             'click', function() {
+                GameAssets['inGameMusic'].pause();
+                GameAssets['titleMusic'].play();
+                GameAssets['titleMusic'].currentTime = 0;
                 toggleMenu(settings.sections.main);
                 curState = states.MAIN;
             }
         );
         document.getElementById(settings.elements.newGame).addEventListener(
             'click',  function() {
+                GameAssets['titleMusic'].pause();
+                GameAssets['inGameMusic'].currentTime = 0;
                 toggleMenu(settings.sections.canvas);
                 curState = states.GAME;
                 gamePlay.RestartGameHandler();
@@ -78,6 +84,7 @@ let Menuing = function() {
                         curState = states.MAIN;
                         break;
                     case states.GAME:
+                        GameAssets['inGameMusic'].volume = 0.1;
                         toggleMenu(settings.sections.pause);
                         curState = states.PAUSE;
                         break;
@@ -98,6 +105,10 @@ let Menuing = function() {
         return curState == states.GAME;
     };
 
+    let GamePaused = function() {
+        return curState == states.PAUSE;
+    };
+
     function toggleMenu(id) {
         document.querySelectorAll('.row-section').forEach(item => {
             item.style.display='none';
@@ -109,5 +120,6 @@ let Menuing = function() {
         InitMenuHandlers,
         GoToMainMenu,
         GameInPlay,
+        GamePaused,
     };
 };
