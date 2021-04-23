@@ -1,1 +1,13 @@
-{"name":"Tetris-Final-Project","description":"Final Project for CS5410","version":"1.0.0","scripts":{"run":"node server.js"},"repository":{"type":"git","url":"https://github.com/drollinger/tetris.git"},"author":"Dallin Drollinger"}
+{
+    "name": "Tetris-Final-Project",
+    "description": "Final Project for CS5410",
+    "version": "1.0.0",
+    "scripts": {
+        "run": "node server.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/drollinger/tetris.git"
+    },
+    "author":"Dallin Drollinger"
+}
