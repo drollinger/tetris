@@ -31,6 +31,7 @@ var settings = {
         dropLow: 80,
         linesPerLevel: 10,
         softSpeedUp: 12,
+        gameOverTime: 3500,
         shapes: [
             //T
             [{x:0,y:1},{x:1,y:0},{x:1,y:1},{x:2,y:1}],
@@ -70,6 +71,9 @@ var settings = {
     },
     fonts: {
         plainText: {size:1, font:"CalculatorRegular"},
+        gameOver: {size:1, font:"Comic Sans MS"},
+        ejection: {size:0.6, font:"Comic Sans MS"},
+        countDown: {size:4, font:"CalculatorRegular"},
     },
     sounds: {
     },
@@ -84,6 +88,8 @@ var settings = {
             'rgba(255, 210, 113, 1)',
         ],
         plainText: "rgba(255, 250, 212,1)",
+        gameOver: "rgba(252, 57, 3, 1)",
+        cover: "rgba(0,0,0,.8)",
     },
     sections: {
         main: 'mainMenuSection',

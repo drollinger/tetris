@@ -56,6 +56,7 @@ let Blocks = function(spec) {
                             stickyFall(Math.max(...clearedLines));
                             Info.stickyFalling = true;
                         } else NewBrickFall();
+                        cSoft = 0;
                     } else if (!hitGround){
                         for (let block of Info.falling) {
                             block.loc.y++;

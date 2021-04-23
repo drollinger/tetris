@@ -49,11 +49,11 @@ function main() {
         graphics.RenderGameInfo({
             gamePlay:gamePlay
         });
-        graphics.RenderGamePlay({
-            gamePlay:gamePlay
-        });
         graphics.RenderBlocks({
             blocks:blocks,
+        });
+        graphics.RenderGamePlay({
+            gamePlay:gamePlay
         });
     };
     
@@ -73,6 +73,7 @@ function Initialize() {
     let gamePlay = GamePlay({
         scores: scores,
         blocks: blocks,
+        menuing: menuing,
     });
 
     //Game Input

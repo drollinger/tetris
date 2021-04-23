@@ -44,13 +44,38 @@ let Graphics = function(spec) {
 
     let RenderGamePlay = function(spec) {
         let info = spec.gamePlay.Info;
+        if (info.gameOver) {
+            context.save();
+            context.fillStyle = settings.colors.cover;
+            context.fillRect(bWidth*SG.startX, bHeight*SG.startY, bWidth*SG.cols, bHeight*SG.rows);
+            context.font = getFont(settings.fonts.gameOver);
+            screenText(settings.colors.gameOver,
+                "Game Over", "", 
+                {x:SG.startX+SG.cols/2, y:SG.startY+SG.rows/3},
+                0, true,
+            );
+            context.font = getFont(settings.fonts.ejection);
+            screenText(settings.colors.plainText,
+                "Ejecting to Menu in:", "", 
+                {x:SG.startX+SG.cols/2, y:SG.startY+SG.rows/2},
+                0, true,
+            );
+            if (info.endCount < 3000) {
+                context.font = getFont(settings.fonts.countDown);
+                screenText(`rgba(252, 257, 252,${(info.endCount%1000)/1000})`,
+                    Math.floor(info.endCount/1000)+1, "", 
+                    {x:SG.startX+SG.cols/2, y:SG.startY+SG.rows/1.25},
+                    0, true,
+                );
+            }
+            context.restore();
+        }
     };
 
     let RenderGameInfo = function(spec) {
         let info = spec.gamePlay.Info;
         let color = settings.colors.plainText;
-        let fontSize = Math.floor(settings.fonts.plainText.size*Math.min(bWidth, bHeight));
-        context.font = fontSize.toString()+"px "+settings.fonts.plainText.font;
+        context.font = getFont(settings.fonts.plainText);
         screenText(color,
             "Score:", info.score, 
             SL.score, SL.widths.gameInfo,
@@ -151,24 +176,29 @@ let Graphics = function(spec) {
         return newImg;
     };
 
-    function screenText(color, lText, rText, loc, width) {
-            context.save();
-            context.fillStyle = color;
-            context.shadowOffsetX = 0;
-            context.shadowOffsetY = 0;
-            context.shadowBlur = 5;
-            context.shadowColor = color;
-            context.textAlign = "left";
-            context.fillText(lText, bWidth*loc.x, bHeight*loc.y);
-            context.textAlign = "right";
-            context.fillText(rText, bWidth*(loc.x+width), bHeight*loc.y);
-            context.shadowBlur = 0;
-            context.textAlign = "left";
-            context.fillText(lText, bWidth*loc.x, bHeight*loc.y);
-            context.textAlign = "right";
-            context.fillText(rText, bWidth*(loc.x+width), bHeight*loc.y);
-            context.restore();
-        };
+    function screenText(color, lText, rText, loc, width, centered=false) {
+        context.save();
+        context.fillStyle = color;
+        context.shadowOffsetX = 0;
+        context.shadowOffsetY = 0;
+        context.shadowBlur = 5;
+        context.shadowColor = color;
+        context.textAlign = centered ? "center" : "left";
+        context.fillText(lText, bWidth*loc.x, bHeight*loc.y);
+        context.textAlign = "right";
+        context.fillText(rText, bWidth*(loc.x+width), bHeight*loc.y);
+        context.shadowBlur = 0;
+        context.textAlign = centered ? "center" : "left";
+        context.fillText(lText, bWidth*loc.x, bHeight*loc.y);
+        context.textAlign = "right";
+        context.fillText(rText, bWidth*(loc.x+width), bHeight*loc.y);
+        context.restore();
+    };
+
+    function getFont(font) {
+        let fontSize =  Math.floor(font.size*Math.min(bWidth, bHeight));
+        return fontSize.toString()+"px "+font.font;
+    };
 
     return {
         Clear,
